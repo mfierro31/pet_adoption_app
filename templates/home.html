@@ -2,14 +2,16 @@
 {% block title %}Pets{% endblock %}
 
 {% block content%}
-<h1 class="display-1">Pets</h1>
+<h1 class="display-1 text-center">Pets</h1>
 <div class="row">
   {% for pet in pets %}
   <div class="col-4">
     <img src="{{pet.photo_url}}" alt="{{pet.name}} the {{pet.species}}" class="img-fluid">
-    <p>{{pet.name}} <b>{% if pet.available %}is available!{% else %}is unavailable{% endif %}</b></p>
+    <p><a href="/{{pet.id}}" class="text-success">{{pet.name}}</a> <b>{% if pet.available %}is available!{% else %}is unavailable{% endif %}</b></p>
   </div>
   {% endfor %}
 </div>
-<a href="/add" class="btn btn-success">Add pet</a>
+<div class="text-center">
+  <a href="/add" class="mt-5 text-center btn btn-success btn-lg">Add pet</a>
+</div>
 {% endblock %}
