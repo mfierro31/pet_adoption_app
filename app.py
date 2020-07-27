@@ -23,13 +23,7 @@ def show_pets():
 def add_pet():
     form = AddPetForm()
 
-    # How do I get species field to be lower()?
-    # Because it's too soon here...
-    # form.species.data = form.species.data.lower()
-
     if form.validate_on_submit():
-        # ... and too late here
-        # form.species.data = form.species.data.lower()
         pic = form.photo_url.data
         pic = pic if pic else None
 
@@ -48,15 +42,16 @@ def display_edit_pet(pet_id):
 
     if form.validate_on_submit():
         pic = form.photo_url.data
+        pic = pic if pic else None
         notes = form.notes.data
 
-        if pic:
-            pet.photo_url = pic
+        pet.photo_url = pic
 
-        if notes:
-            pet.notes = notes
+        pet.notes = notes
         
         pet.available = form.available.data
+
+        db.session.commit()
 
         return redirect(f'/{pet.id}')
     else:
