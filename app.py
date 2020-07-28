@@ -26,10 +26,15 @@ def add_pet():
     form = AddPetForm()
 
     if form.validate_on_submit():
-        pic = form.photo_url.data
-        pic = pic if pic else None
+        form_data = form.data
+        form_data.pop('csrf_token', None)
+        form_data = form_data
 
-        new_pet = Pet(name=form.name.data, species=form.species.data, photo_url=pic, age=form.age.data, notes=form.notes.data)
+        new_pet = Pet(**form_data)
+
+        if not new_pet.photo_url:
+            new_pet.photo_url = None
+
         db.session.add(new_pet)
         db.session.commit()
 
@@ -46,8 +51,10 @@ def display_edit_pet(pet_id):
     
     if form.validate_on_submit():
         pic = form.photo_url.data
-        pic = pic if pic else None
-        notes = form.notes.data
+        # This line doesn't work here for some reason.  Still trying to figure this out.  Even though pic gets set to None if
+        # the photo_url is an empty string, it still doesn't get set to the default_img value.  I have to set it manually below
+        # in the else: block
+        # pic = pic if pic else None
 
         if pic:
             pet.photo_url = pic
@@ -56,9 +63,7 @@ def display_edit_pet(pet_id):
 
         pet.name = form.name.data
         pet.age = form.age.data
-
-        pet.notes = notes
-        
+        pet.notes = form.notes.data
         pet.available = form.available.data
 
         db.session.commit()
