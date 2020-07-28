@@ -2,13 +2,18 @@
 {% block title %}View/Edit {{pet.name}}{% endblock %}
 
 {% block content%}
+{% for msg in get_flashed_messages() %}
+<div class="alert alert-success mt-4 text-center" role="alert">
+  {{msg}}
+</div>
+{% endfor %}
 <h1 class="display-1 text-center">{{pet.name}}</h1>
 <div class="row">
   <div class="col text-center">
     Species: {{pet.species}}
   </div>
   <div class="col">
-    <img src="{{pet.photo_url}}" alt="{{pet.name}}" class="img-fluid">
+    <img src="{{pet.photo_url}}" alt="{{pet.name}} the {{pet.species}}" class="img-fluid">
   </div>
   <div class="col text-center">
     Age: {% if pet.age or pet.age == 0 %}{{pet.age}}{% else %}?{% endif %}
@@ -18,9 +23,23 @@
   {{form.hidden_tag()}}
   {% for field in form 
     if field.widget.input_type != 'hidden'  %}
+  <!-- This if statement is to check to see if the input type is checkbox, and if it is, we apply different
+  Bootstrap styles to it -->
+  {% if field.name == 'available' %}
+  <div class="form-group form-check my-4">
+    {{field(class_="form-check-input")}}
+    {{field.label(class_="form-check-label")}}
+  {% else %}
   <div class="form-group">
     {{field.label}}
+    <!-- This if statement is to check to see if the existing photo_url for the pet is the default picture.
+    If it is, we don't want to show the URL, if it isn't, we do. -->
+    {% if field.name == 'photo_url' and field.data == 'https://pawedin.com/system/pets/default_images/default_pet.jpg' %}
+    {{field(class_="form-control", value="")}}
+    {% else %}
     {{field(class_="form-control")}}
+    {% endif %}
+  {% endif %}
     {% for err in field.errors %}
     <small class="form-text text-danger">
       {{err}}
@@ -28,7 +47,7 @@
     {% endfor %}
   </div>
   {% endfor %}
-  <button class="btn btn-success btn-lg">Submit</button>
+  <button class="btn btn-success btn-lg">Edit</button>
   <a href="/" class="btn btn-info btn-lg">Go back</a>
 </form>
 {% endblock %}

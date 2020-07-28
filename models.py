@@ -5,6 +5,7 @@ default_img = 'https://pawedin.com/system/pets/default_images/default_pet.jpg'
 db = SQLAlchemy()
 
 def connect_db(app):
+    """Connect the database to our app"""
     db.app = app
     db.init_app(app)
 

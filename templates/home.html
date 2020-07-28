@@ -2,6 +2,11 @@
 {% block title %}Pets{% endblock %}
 
 {% block content%}
+{% for msg in get_flashed_messages() %}
+<div class="alert alert-success mt-4 text-center" role="alert">
+  {{msg}}
+</div>
+{% endfor %}
 <h1 class="display-1 text-center">Pets</h1>
 <div class="row">
   {% for pet in pets %}
